@@ -79,7 +79,7 @@ bool CEntity::UpdatePawn(const DWORD64& PlayerPawnAddress)
 		return false;
 	}
 	if (!this->Pawn.BoneData.UpdateAllBoneData(PlayerPawnAddress)) {
-		std::cout << "[DEBUG] Pawn -> Unable to get bon data." << std::endl;
+		//std::cout << "[DEBUG] Pawn -> Unable to get bon data." << std::endl;
 		return false;
 	}
 
@@ -160,11 +160,6 @@ bool PlayerPawn::GetAimPunchAngle()
 {
 	return GetDataAddressWithOffset<Vec2>(Address, Offset::Pawn.aimPunchAngle, this->AimPunchAngle);
 }
-
-//bool PlayerPawn::GetTeamID()
-//{
-//	return GetDataAddressWithOffset<int>(Address, Offset::Pawn.iTeamNum, this->TeamID);
-//}
 
 bool PlayerPawn::GetAimPunchCache()
 {

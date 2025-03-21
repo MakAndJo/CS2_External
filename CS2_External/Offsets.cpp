@@ -25,58 +25,7 @@ bool Offset::UpdateOffsets()
 		std::cout << "[ERROR] Client DLL is null." << std::endl;
 		return false;
 	}
-	
-	DWORD64 TempAddress = 0;
 
-	//TempAddress = SearchOffsets(Offset::Signatures::EntityList, ClientDLL);
-	//if (TempAddress == 0) {
-	//	std::cout << "[ERROR] EntityList is null." << std::endl;
-	//	return false;
-	//}
-
-	//Offset::EntityList = TempAddress - ClientDLL;
-
-	//TempAddress = SearchOffsets(Offset::Signatures::LocalPlayerController, ClientDLL);
-	//if (TempAddress == 0) {
-	//	std::cout << "[ERROR] LocalPlayerController is null." << std::endl;
-	//	return false;
-	//}
-
-	//Offset::LocalPlayerController = TempAddress - ClientDLL;
-
-	//TempAddress = SearchOffsets(Offset::Signatures::ViewMatrix, ClientDLL);
-	//if (TempAddress == 0) {
-	//	std::cout << "[ERROR] ViewMatrix is null." << std::endl;
-	//	return false;
-	//}
-
-	//Offset::Matrix = TempAddress - ClientDLL;
-
-	//TempAddress = SearchOffsets(Offset::Signatures::GlobalVars, ClientDLL);
-	//if (TempAddress == 0) {
-	//	std::cout << "[ERROR] GlobalVars is null." << std::endl;
-	//	return false;
-	//}
-
-	//Offset::GlobalVars = TempAddress - ClientDLL;
-
-	/*TempAddress = SearchOffsets(Offset::Signatures::ViewAngles, ClientDLL);
-	if (TempAddress == 0) {
-		std::cout << "[ERROR] ViewAngles is null." << std::endl;
-		return false;
-	}
-	if (!ProcessMgr.ReadMemory(TempAddress, TempAddress))
-		return false;
-
-	Offset::ViewAngle = TempAddress + 0x6140 - ClientDLL;*/
-
-	//TempAddress = SearchOffsets(Offset::Signatures::LocalPlayerPawn, ClientDLL);
-	//if (TempAddress == 0) {
-	//	std::cout << "[ERROR] LocalPlayerPawn is null." << std::endl;
-	//	return false;
-	//}
-
-	//Offset::LocalPlayerPawn = TempAddress + 0x138 - ClientDLL;
 
 	return true;
 }
