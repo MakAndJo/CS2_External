@@ -9,7 +9,7 @@ bool CGame::InitAddress()
 	this->Address.ViewAngle = GetClientDLLAddress() + Offset::ViewAngle;
 	this->Address.LocalController = GetClientDLLAddress() + Offset::LocalPlayerController;
 	this->Address.LocalPawn = GetClientDLLAddress() + Offset::LocalPlayerPawn;
-	this->Address.ForceJump = GetClientDLLAddress() + Offset::ForceJump;
+	//this->Address.ForceJump = GetClientDLLAddress() + Offset::ForceJump;
 	this->Address.GlobalVars = GetClientDLLAddress() + Offset::GlobalVars;
 
 	return this->Address.ClientDLL != 0;
@@ -73,14 +73,6 @@ bool CGame::SetViewAngle(float Yaw, float Pitch)
 	Vec2 Angle{ Pitch,Yaw };
 
 	if (!ProcessMgr.WriteMemory<Vec2>(this->Address.ViewAngle, Angle))
-		return false;
-
-	return true;
-}
-
-bool CGame::SetForceJump(int value)
-{
-	if (!ProcessMgr.WriteMemory<int>(this->Address.ForceJump, value))
 		return false;
 
 	return true;

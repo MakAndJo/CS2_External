@@ -14,13 +14,13 @@ class PlayerController
 {
 public:
 	DWORD64 Address = 0;
-	int TeamID = 0;
+	//int TeamID = 0;
 	int Health = 0;
 	int AliveStatus = 0;
 	DWORD Pawn = 0;
 	std::string PlayerName;
 public:
-	bool GetTeamID();
+	//bool GetTeamID();
 	bool GetHealth();
 	bool GetIsAlive();
 	bool GetPlayerName();
@@ -47,7 +47,7 @@ public:
 	Vec2 AimPunchAngle;
 	C_UTL_VECTOR AimPunchCache;
 	int Health;
-	int TeamID;
+	//int TeamID;
 	int Fov;
 	DWORD64 bSpottedByMask;
 	int fFlags;
@@ -59,7 +59,7 @@ public:
 	bool GetShotsFired();
 	bool GetAimPunchAngle();
 	bool GetHealth();
-	bool GetTeamID();
+	//bool GetTeamID();
 	bool GetFov();
 	bool GetSpotted();
 	bool GetFFlags();

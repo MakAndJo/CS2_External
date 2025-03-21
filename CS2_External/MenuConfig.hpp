@@ -48,7 +48,6 @@ namespace MenuConfig
 	inline bool Pressed = false;// for toggle mode
 	inline bool Shoot = false;// so that it doesn’t aim when the trigger hits
 
-	inline bool TeamCheck = true;
 	inline bool OBSBypass = true;
 
 	inline bool BunnyHop = false;

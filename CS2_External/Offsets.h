@@ -1,47 +1,50 @@
 #pragma once
 #include <Windows.h>
 #include "Utils/ProcessManager.hpp"
+#include "a2x/offsets.hpp"
+#include "a2x/client_dll.hpp"
+#include "a2x/buttons.hpp"
 
 // From: https://github.com/a2x/cs2-dumper/blob/main/generated/client.dll.hpp
 namespace Offset
 {
-	inline DWORD EntityList;
-	inline DWORD Matrix;
-	inline DWORD ViewAngle;
-	inline DWORD LocalPlayerController;
-	inline DWORD LocalPlayerPawn;
-	inline DWORD ForceJump;
-	inline DWORD GlobalVars;
+	inline DWORD EntityList = cs2_dumper::offsets::client_dll::dwEntityList; // ok
+	inline DWORD Matrix = cs2_dumper::offsets::client_dll::dwViewMatrix; // ok
+	inline DWORD ViewAngle = cs2_dumper::offsets::client_dll::dwViewAngles; // ok
+	inline DWORD LocalPlayerController = cs2_dumper::offsets::client_dll::dwLocalPlayerController; // ok
+	inline DWORD LocalPlayerPawn = cs2_dumper::offsets::client_dll::dwLocalPlayerPawn; // ok
+	inline DWORD GlobalVars = cs2_dumper::offsets::client_dll::dwGlobalVars; // ok
 
 	struct
 	{
-		DWORD Health = 0x32C;
-		DWORD TeamID = 0x3BF;
-		DWORD IsAlive = 0x7DC;
-		DWORD PlayerPawn = 0x5F4;
-		DWORD iszPlayerName = 0x628;
+		DWORD Health = cs2_dumper::schemas::client_dll::C_BaseEntity::m_iHealth; // ok
+		//DWORD TeamID = 0x3BF;
+		DWORD IsAlive = cs2_dumper::schemas::client_dll::CCSPlayerController::m_bPawnIsAlive;
+		DWORD PlayerPawn = cs2_dumper::schemas::client_dll::CCSPlayerController::m_hPlayerPawn;
+		DWORD iszPlayerName = cs2_dumper::schemas::client_dll::CBasePlayerController::m_iszPlayerName;
 	}Entity;
 
 	struct
-	{
-		DWORD Pos = 0x1224;
-		DWORD MaxHealth = 0x328;
-		DWORD CurrentHealth = 0x32C;
-		DWORD GameSceneNode = 0x310;
-		DWORD BoneArray = 0x1E0;
-		DWORD angEyeAngles = 0x1510;
-		DWORD vecLastClipCameraPos = 0x128C;
-		DWORD pClippingWeapon = 0x12A8;
-		DWORD iShotsFired = 0x1418;
-		DWORD flFlashDuration = 0x1468;
-		DWORD aimPunchAngle = 0x1714;
-		DWORD aimPunchCache = 0x1738;
-		DWORD iIDEntIndex = 0x153C;
-		DWORD iTeamNum = 0x3BF;
-		DWORD CameraServices = 0x10E0;
-		DWORD iFovStart = 0x214;
-		DWORD fFlags = 0x3C8;
-		DWORD bSpottedByMask = 0x1630 + 0xC; // entitySpottedState + bSpottedByMask
+	{ // CBaseEntity, CSPlayerPawnBase
+		DWORD CameraServices = cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_pCameraServices;
+
+		DWORD Pos = cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_vOldOrigin; // C_BasePlayerPawn::m_vOldOrigin // ok
+		DWORD MaxHealth = cs2_dumper::schemas::client_dll::C_BaseEntity::m_iMaxHealth; // C_BaseEntity::m_iMaxHealth
+		DWORD CurrentHealth = cs2_dumper::schemas::client_dll::C_BaseEntity::m_iHealth; // C_BaseEntity::m_iHealth
+		DWORD GameSceneNode = cs2_dumper::schemas::client_dll::C_BaseEntity::m_pGameSceneNode; // C_BaseEntity::m_pGameSceneNode
+		DWORD BoneArray = cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState + cs2_dumper::schemas::client_dll::CGameSceneNode::m_vecOrigin; // CSkeletonInstance_::m_modelState + CGameSceneNode_::m_vecOrigin
+		DWORD angEyeAngles = cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_angEyeAngles;
+		DWORD vecLastClipCameraPos = cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_vecLastClipCameraPos;
+		DWORD pClippingWeapon = cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_pClippingWeapon;			// C_CSWeaponBase*
+		DWORD iShotsFired = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_iShotsFired;
+		DWORD flFlashDuration = cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_flFlashDuration;
+		DWORD aimPunchAngle = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchAngle;			// C_CSPlayerPawn::m_aimPunchAngle
+		DWORD aimPunchCache = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_aimPunchCache;
+		DWORD iIDEntIndex = cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_iIDEntIndex;
+		DWORD iTeamNum = cs2_dumper::schemas::client_dll::C_BaseEntity::m_iTeamNum;
+		DWORD iFovStart = cs2_dumper::schemas::client_dll::CCSPlayerBase_CameraServices::m_iFOVStart;
+		DWORD fFlags = cs2_dumper::schemas::client_dll::C_BaseEntity::m_fFlags;
+		DWORD bSpottedByMask = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_entitySpottedState + cs2_dumper::schemas::client_dll::EntitySpottedState_t::m_bSpottedByMask;	// C_CSPlayerPawn::entitySpottedState + EntitySpottedState_t::bSpottedByMask
 	}Pawn;
 
 	struct
@@ -61,13 +64,7 @@ namespace Offset
 
 	namespace Signatures
 	{
-		const std::string GlobalVars = "48 89 0D ?? ?? ?? ?? 48 89 41";
-		const std::string ViewMatrix = "48 8D 0D ?? ?? ?? ?? 48 C1 E0 06";
-		const std::string ViewAngles = "48 8B 0D ?? ?? ?? ?? E9 ?? ?? ?? ?? CC CC CC CC 40 55";
-		const std::string EntityList = "48 8B 0D ?? ?? ?? ?? 48 89 7C 24 ?? 8B FA C1";
-		const std::string LocalPlayerController = "48 8B 05 ?? ?? ?? ?? 48 85 C0 74 4F";
-		const std::string ForceJump = "48 8B 05 ?? ?? ?? ?? 48 8D 1D ?? ?? ?? ?? 48 89 45";
-		const std::string LocalPlayerPawn = "48 8D 05 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 48 83 EC ?? 8B 0D";
+
 	}
 
 	bool UpdateOffsets();

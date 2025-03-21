@@ -13,7 +13,7 @@ void Cheats::Menu()
 		IsMenuInit = true;
 	}
 
-	ImGui::Begin("Menu",nullptr,ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("TJMC Menu",nullptr,ImGuiWindowFlags_AlwaysAutoResize);
 	{
 		ImGui::BeginTabBar("Cheat");
 		// esp menu
@@ -49,7 +49,7 @@ void Cheats::Menu()
 			ImGui::ColorEdit4("##FovLineColor", reinterpret_cast<float*>(&MenuConfig::FovLineColor), ImGuiColorEditFlags_NoInputs);
 			float FovLineSizeMin = 20.f, FovLineSizeMax = 120.f;
 			Gui.SliderScalarEx1("FovLineSize", ImGuiDataType_Float, &MenuConfig::FovLineSize, &FovLineSizeMin, &FovLineSizeMax, "%.1f", ImGuiSliderFlags_None);
-		
+
 			Gui.MyCheckBox("LineToEnemy", &MenuConfig::ShowLineToEnemy);
 			ImGui::SameLine();
 			ImGui::ColorEdit4("##LineToEnemyColor", reinterpret_cast<float*>(&MenuConfig::LineToEnemyColor), ImGuiColorEditFlags_NoInputs);
@@ -59,12 +59,12 @@ void Cheats::Menu()
 			ImGui::ColorEdit4("##CrossHairColor", reinterpret_cast<float*>(&MenuConfig::CrossHairColor), ImGuiColorEditFlags_NoInputs);
 			float CrossHairSizeMin = 15, CrossHairSizeMax = 200;
 			Gui.SliderScalarEx1("CrossHairSize", ImGuiDataType_Float, &MenuConfig::CrossHairSize, &CrossHairSizeMin, &CrossHairSizeMax, "%.1f", ImGuiSliderFlags_None);
-		
+
 			ImGui::EndTabItem();
 		}
 
 		// aimbot menu
-		if (ImGui::BeginTabItem("AimBot "))
+		if (ImGui::BeginTabItem("AimBot IDK"))
 		{
 			Gui.MyCheckBox("AimBot", &MenuConfig::AimBot);
 
@@ -104,12 +104,12 @@ void Cheats::Menu()
 			Gui.SliderScalarEx1("RCS Yaw", ImGuiDataType_Float, &AimControl::RCSScale.x, &RecoilMin, &RecoilMax, "%.1f", ImGuiSliderFlags_None);
 			Gui.SliderScalarEx1("RCS Pitch", ImGuiDataType_Float, &AimControl::RCSScale.y, &RecoilMin, &RecoilMax, "%.1f", ImGuiSliderFlags_None);
 			Gui.MyCheckBox("VisibleCheck", &MenuConfig::VisibleCheck);
-		
+
 			ImGui::EndTabItem();
 		}
 
 		// Radar menu
-		if (ImGui::BeginTabItem("Radar "))
+		if (ImGui::BeginTabItem("Radar OK"))
 		{
 			Gui.MyCheckBox("Radar", &MenuConfig::ShowRadar);
 			ImGui::Combo("RadarType", &MenuConfig::RadarType, "Circle\0Arrow\0CircleWithArrow");
@@ -124,12 +124,12 @@ void Cheats::Menu()
 			Gui.SliderScalarEx1("PointSize", ImGuiDataType_Float, &MenuConfig::RadarPointSizeProportion, &RadarPointSizeProportionMin, &RadarPointSizeProportionMax, "%.1f", ImGuiSliderFlags_None);
 			Gui.SliderScalarEx1("Proportion", ImGuiDataType_Float, &MenuConfig::Proportion, &ProportionMin, &ProportionMax, "%.1f", ImGuiSliderFlags_None);
 			Gui.SliderScalarEx1("RadarRange", ImGuiDataType_Float, &MenuConfig::RadarRange, &RadarRangeMin, &RadarRangeMax, "%.1f", ImGuiSliderFlags_None);
-		
+
 			ImGui::EndTabItem();
 		}
 
 		// TriggerBot
-		if (ImGui::BeginTabItem("TriggerBot "))
+		if (ImGui::BeginTabItem("TriggerBot OK"))
 		{
 			Gui.MyCheckBox("TriggerBot", &MenuConfig::TriggerBot);
 
@@ -152,8 +152,6 @@ void Cheats::Menu()
 		{
 			// moved to misc
 			Gui.MyCheckBox("AntiFlashbang", &MenuConfig::AntiFlashbang);
-			// TeamCheck
-			Gui.MyCheckBox("TeamCheck", &MenuConfig::TeamCheck);
 
 			ImGui::SameLine();
 			// OBS Bypass
@@ -170,7 +168,7 @@ void Cheats::Menu()
 
 		// Render config saver
 		ConfigMenu::RenderConfigMenu();
-		
+
 		ImGui::Separator();
 
 		ImGui::Text("[HOME] HideMenu");
@@ -220,8 +218,10 @@ void Cheats::Run()
 		Menu();
 
 	// Update matrix
-	if (!ProcessMgr.ReadMemory(gGame.GetMatrixAddress(), gGame.View.Matrix, 64))
+	if (!ProcessMgr.ReadMemory(gGame.GetMatrixAddress(), gGame.View.Matrix, 64)) {
+		std::cout << "[ERROR] Unable to read matrix." << std::endl;
 		return;
+	}
 
 	// Update EntityList Entry
 	gGame.UpdateEntityListEntry();
@@ -229,23 +229,31 @@ void Cheats::Run()
 	DWORD64 LocalControllerAddress = 0;
 	DWORD64 LocalPawnAddress = 0;
 
-	if (!ProcessMgr.ReadMemory(gGame.GetLocalControllerAddress(), LocalControllerAddress))
+	if (!ProcessMgr.ReadMemory(gGame.GetLocalControllerAddress(), LocalControllerAddress)) {
+		std::cout << "[ERROR] Unable to read local controller." << std::endl;
 		return;
-	if (!ProcessMgr.ReadMemory(gGame.GetLocalPawnAddress(), LocalPawnAddress))
+	}
+	if (!ProcessMgr.ReadMemory(gGame.GetLocalPawnAddress(), LocalPawnAddress)) {
+		std::cout << "[ERROR] Unable to read pawn." << std::endl;
 		return;
+	}
 
 	// LocalEntity
 	CEntity LocalEntity;
 	static int LocalPlayerControllerIndex = 1;
-	if (!LocalEntity.UpdateController(LocalControllerAddress))
+	if (!LocalEntity.UpdateController(LocalControllerAddress)) {
+		std::cout << "[ERROR] Unable to bind local controller to local entity." << std::endl;
 		return;
-	if (!LocalEntity.UpdatePawn(LocalPawnAddress) && !MenuConfig::ShowWhenSpec)
+	}
+	if (!LocalEntity.UpdatePawn(LocalPawnAddress) && !MenuConfig::ShowWhenSpec) {
+		std::cout << "[ERROR] Unable to bind pawn to local entity." << std::endl;
 		return;
+	}
 
-	// HealthBar Map
+	//// HealthBar Map
 	static std::map<DWORD64, Render::HealthBar> HealthBarMap;
 
-	// AimBot data
+	//// AimBot data
 	float DistanceToSight = 0;
 	float MaxAimDistance = 100000;
 	Vec3  HeadPos{ 0,0,0 };
@@ -253,15 +261,17 @@ void Cheats::Run()
 
 	// Radar Data
 	Base_Radar Radar;
-	if (MenuConfig::ShowRadar)
-		RadarSetting(Radar);
+	if (MenuConfig::ShowRadar) RadarSetting(Radar);
 
 	for (int i = 0; i < 64; i++)
 	{
 		CEntity Entity;
 		DWORD64 EntityAddress = 0;
-		if (!ProcessMgr.ReadMemory<DWORD64>(gGame.GetEntityListEntry() + (i + 1) * 0x78, EntityAddress))
+		//std::cout << "[DEBUG] Entity list entry " << gGame.GetEntityListEntry() << std::endl;
+		if (!ProcessMgr.ReadMemory<DWORD64>(gGame.GetEntityListEntry() + (i + 1) * 0x78, EntityAddress)) {
+			std::cout << "[DEBUG] No entity -> skip." << std::endl;
 			continue;
+		}
 
 		if (EntityAddress == LocalEntity.Controller.Address)
 		{
@@ -269,17 +279,20 @@ void Cheats::Run()
 			continue;
 		}
 
-		if (!Entity.UpdateController(EntityAddress))
+		if (!Entity.UpdateController(EntityAddress)) {
+			//std::cout << Format("[DEBUG] entity update controller invalid:%llX\n",EntityAddress);
 			continue;
+		}
 
-		if (!Entity.UpdatePawn(Entity.Pawn.Address))
+		if (!Entity.UpdatePawn(Entity.Pawn.Address)) {
+			std::cout << "[DEBUG] entity update pawn invalid." << std::endl;
 			continue;
+		}
 
-		if (MenuConfig::TeamCheck && Entity.Controller.TeamID == LocalEntity.Controller.TeamID)
+		if (!Entity.IsAlive()) {
+			//std::cout << "[DEBUG] Entity is dead." << std::endl;
 			continue;
-
-		if (!Entity.IsAlive())
-			continue;
+		}
 
 		// Add entity to radar
 		if (MenuConfig::ShowRadar)
@@ -288,15 +301,15 @@ void Cheats::Run()
 		if (!Entity.IsInScreen())
 			continue;
 
-		// Bone Debug
-	/*	for (int BoneIndex = 0; BoneIndex < Entity.BoneData.BonePosList.size(); BoneIndex++)
-		{
-			Vec2 ScreenPos{};
-			if (gGame.View.WorldToScreen(Entity.BoneData.BonePosList[BoneIndex].Pos, ScreenPos))
-			{
-				Gui.Text(std::to_string(BoneIndex), ScreenPos, ImColor(255, 255, 255, 255));
-			}
-		}*/
+	//	// Bone Debug
+	//	/*	for (int BoneIndex = 0; BoneIndex < Entity.BoneData.BonePosList.size(); BoneIndex++)
+	//	{
+	//		Vec2 ScreenPos{};
+	//		if (gGame.View.WorldToScreen(Entity.BoneData.BonePosList[BoneIndex].Pos, ScreenPos))
+	//		{
+	//			Gui.Text(std::to_string(BoneIndex), ScreenPos, ImColor(255, 255, 255, 255));
+	//		}
+	//	}*/
 
 		DistanceToSight = Entity.GetBone().BonePosList[BONEINDEX::head].ScreenPos.DistanceTo({ Gui.Window.Size.x / 2,Gui.Window.Size.y / 2 });
 
@@ -411,13 +424,13 @@ void Cheats::Run()
 		TriggerBot::Run(LocalEntity);
 		MenuConfig::Shoot = false;
 	}
-	else if (MenuConfig::TriggerMode == 1 && MenuConfig::TriggerBot && MenuConfig::Pressed) 
+	else if (MenuConfig::TriggerMode == 1 && MenuConfig::TriggerBot && MenuConfig::Pressed)
 	{
 		MenuConfig::Shoot = true;
 		TriggerBot::Run(LocalEntity);
 		MenuConfig::Shoot = false;
 	}
-			
+
 
 
 	// HeadShoot Line
@@ -431,7 +444,7 @@ void Cheats::Run()
 	// Fov circle
 	if(MenuConfig::ShowAimFovRange)
 		Render::DrawFovCircle(LocalEntity);
-	
+
 	if (MenuConfig::BunnyHop)
 		Bunnyhop::Run(LocalEntity);
 

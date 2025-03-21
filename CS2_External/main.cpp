@@ -48,7 +48,7 @@ int main()
 	std::cout << Format("--LocalPlayerController:%llX\n", Offset::LocalPlayerController);
 	std::cout << Format("--ViewAngles:%llX\n", Offset::ViewAngle);
 	std::cout << Format("--LocalPlayerPawn:%llX\n", Offset::LocalPlayerPawn);
-	std::cout << Format("--ForceJump:%llX\n", Offset::ForceJump);
+	//std::cout << Format("--ForceJump:%llX\n", Offset::ForceJump);
 
 
 	if (fs::exists(MenuConfig::path))

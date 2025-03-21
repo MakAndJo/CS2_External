@@ -23,10 +23,8 @@ void TriggerBot::Run(const CEntity& LocalEntity)
 
 	bool AllowShoot = false;
 
-	if (MenuConfig::TeamCheck)
-		AllowShoot = LocalEntity.Pawn.TeamID != Entity.Pawn.TeamID && Entity.Pawn.Health > 0;
-	else
-		AllowShoot = Entity.Pawn.Health > 0;
+
+	AllowShoot = Entity.Pawn.Health > 0;
 
 	if (!AllowShoot)
 		return;

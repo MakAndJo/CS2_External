@@ -2,18 +2,26 @@
 
 bool CEntity::UpdateController(const DWORD64& PlayerControllerAddress)
 {
-	if (PlayerControllerAddress == 0)
+	if (PlayerControllerAddress == 0) {
+		//std::cout << "[DEBUG] Player controller address is null." << std::endl;
 		return false;
+	}
 	this->Controller.Address = PlayerControllerAddress;
 
-	if (!this->Controller.GetHealth())
+	if (!this->Controller.GetHealth()) {
+		std::cout << "[DEBUG] Controller -> Unable to get health." << std::endl;
 		return false;
-	if (!this->Controller.GetIsAlive())
+	}
+	if (!this->Controller.GetIsAlive()) {
+		std::cout << "[DEBUG] Controller -> Unable to get isAlive." << std::endl;
 		return false;
-	if (!this->Controller.GetTeamID())
+	}
+	/*if (!this->Controller.GetTeamID())
+		return false;*/
+	if (!this->Controller.GetPlayerName()) {
+		std::cout << "[DEBUG] Controller -> Unable to get playerName." << std::endl;
 		return false;
-	if (!this->Controller.GetPlayerName())
-		return false;
+	}
 
 	this->Pawn.Address = this->Controller.GetPlayerPawnAddress();
 
@@ -26,39 +34,56 @@ bool CEntity::UpdatePawn(const DWORD64& PlayerPawnAddress)
 		return false;
 	this->Pawn.Address = PlayerPawnAddress;
 
-	if (!this->Pawn.GetCameraPos())
+	if (!this->Pawn.GetCameraPos()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get cam pos." << std::endl;
 		return false;
-	if (!this->Pawn.GetPos())
+	}
+	if (!this->Pawn.GetPos()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get pos." << std::endl;
 		return false;
-	if (!this->Pawn.GetViewAngle())
+	}
+	if (!this->Pawn.GetViewAngle()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get view angle." << std::endl;
 		return false;
-	if (!this->Pawn.GetWeaponName())
+	}
+	if (!this->Pawn.GetWeaponName()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get wpn." << std::endl;
 		return false;
-	if (!this->Pawn.GetAimPunchAngle())
+	}
+	if (!this->Pawn.GetAimPunchAngle()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get pch_ang." << std::endl;
 		return false;
-	if (!this->Pawn.GetShotsFired())
+	}
+	if (!this->Pawn.GetShotsFired()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get sht_fr." << std::endl;
 		return false;
-	if (!this->Pawn.GetHealth())
+	}
+	if (!this->Pawn.GetHealth()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get htls." << std::endl;
 		return false;
-	if (!this->Pawn.GetTeamID())
+	}
+	if (!this->Pawn.GetFov()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get fov." << std::endl;
 		return false;
-	if (!this->Pawn.GetFov())
+	}
+	if (!this->Pawn.GetSpotted()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get spotted." << std::endl;
 		return false;
-	if (!this->Pawn.GetSpotted())
+	}
+	if (!this->Pawn.GetFFlags()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get fflags." << std::endl;
 		return false;
-	if (!this->Pawn.GetFFlags())
+	}
+	if (!this->Pawn.GetAimPunchCache()) {
+		std::cout << "[DEBUG] Pawn -> Unable to get aim puch cah." << std::endl;
 		return false;
-	if (!this->Pawn.GetAimPunchCache())
+	}
+	if (!this->Pawn.BoneData.UpdateAllBoneData(PlayerPawnAddress)) {
+		std::cout << "[DEBUG] Pawn -> Unable to get bon data." << std::endl;
 		return false;
-	if (!this->Pawn.BoneData.UpdateAllBoneData(PlayerPawnAddress))
-		return false;
+	}
 
 	return true;
-}
-
-bool PlayerController::GetTeamID()
-{
-	return GetDataAddressWithOffset<int>(Address, Offset::Entity.TeamID, this->TeamID);
 }
 
 bool PlayerController::GetHealth()
@@ -136,10 +161,10 @@ bool PlayerPawn::GetAimPunchAngle()
 	return GetDataAddressWithOffset<Vec2>(Address, Offset::Pawn.aimPunchAngle, this->AimPunchAngle);
 }
 
-bool PlayerPawn::GetTeamID()
-{
-	return GetDataAddressWithOffset<int>(Address, Offset::Pawn.iTeamNum, this->TeamID);
-}
+//bool PlayerPawn::GetTeamID()
+//{
+//	return GetDataAddressWithOffset<int>(Address, Offset::Pawn.iTeamNum, this->TeamID);
+//}
 
 bool PlayerPawn::GetAimPunchCache()
 {

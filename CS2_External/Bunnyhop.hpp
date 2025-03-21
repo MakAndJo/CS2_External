@@ -14,26 +14,26 @@ namespace Bunnyhop
 
     inline void Run(const CEntity& Local)
     {
-        if (!MenuConfig::BunnyHop)
-            return;
+        //if (!MenuConfig::BunnyHop)
+        //    return;
 
-        int ForceJump = 0;
-        bool spacePressed = GetAsyncKeyState(VK_SPACE);
-        bool isInAir = AirCheck(Local);
-        gGame.SetForceJump(ForceJump);
+        //int ForceJump = 0;
+        //bool spacePressed = GetAsyncKeyState(VK_SPACE);
+        //bool isInAir = AirCheck(Local);
+        //gGame.SetForceJump(ForceJump);
 
-        if (spacePressed && isInAir)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(5)); // milliseconds
-            gGame.SetForceJump(65537);
-        }
-        else if (spacePressed && !isInAir)
-        {
-            gGame.SetForceJump(256);
-        }
-        else if (!spacePressed && ForceJump == 65537)
-        {
-            gGame.SetForceJump(256);
-        }
+        //if (spacePressed && isInAir)
+        //{
+        //    std::this_thread::sleep_for(std::chrono::milliseconds(5)); // milliseconds
+        //    gGame.SetForceJump(65537);
+        //}
+        //else if (spacePressed && !isInAir)
+        //{
+        //    gGame.SetForceJump(256);
+        //}
+        //else if (!spacePressed && ForceJump == 65537)
+        //{
+        //    gGame.SetForceJump(256);
+        //}
     }
 }

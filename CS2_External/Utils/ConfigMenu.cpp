@@ -112,7 +112,6 @@ namespace ConfigMenu {
 		MenuConfig::RadarPointSizeProportion = 1.f;
 		MenuConfig::Proportion = 2230;
 		MenuConfig::TriggerBot = true;
-		MenuConfig::TeamCheck = true;
 		MenuConfig::VisibleCheck = true;
 		MenuConfig::ShowHeadShootLine = true;
 		MenuConfig::HeadShootLineColor = ImVec4(255, 255, 255, 255);
